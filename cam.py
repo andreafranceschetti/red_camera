@@ -77,11 +77,19 @@ class RCPSetRelative(RCPMessage):
 
 class RCPSetListRelative(RCPMessage):
 
-    def __init__(self, param_id:str, offset) -> None:
+    def __init__(self, param_id:str, offset:int) -> None:
         self.data = {
             "type":"rcp_set_list_relative",
             "id": param_id,
             "offset": offset
+        }
+
+class RCPGetList(RCPMessage):
+
+    def __init__(self, param_id:str) -> None:
+        self.data = {
+            "type":"rcp_get_list",
+            "id": param_id,
         }
 
 class RedCamera:
@@ -101,13 +109,17 @@ class RedCamera:
 
     def send(self, message: RCPMessage):
         self.websocket.send(message.to_json())
+        return self.recv(timeout=0.1)
 
-    def recv(self) -> RCPMessage:
-        return RCPMessage(json.dumps(self.websocket.recv()))
+    def recv(self, timeout = 0.1) -> RCPMessage:
+        try:
+            data = json.loads(self.websocket.recv(timeout=timeout))
+        except TimeoutError:
+            return None 
+        return RCPMessage(data)
     
     def initialize(self) -> bool:
-        self.send(RCPConfig())
-        resp = self.recv()
+        resp = self.send(RCPConfig())
 
         if resp.type == RCPConfig().type:
             return True
@@ -119,14 +131,20 @@ class RedCamera:
         self.send(rcp_set)
     
     def retrieve_available_config(self):
-        self.send(RCPGetTypes())
-        self.available_settings = self.recv().data
+        available_settings = self.send(RCPGetTypes())
+        self.available_settings = available_settings.data
+        print(self.available_settings)
 
 class KeyPadCommands(Enum):
 
     ZOOM = 0
     AUTOFOCUS = 1
 
+iso_plus = RCPSetListRelative("ISO", +1)
+iso_minus = RCPSetListRelative("ISO", -1)
+
+fps_plus  = RCPSetListRelative("SENSOR_FRAME_RATE", +1)
+fps_minus = RCPSetListRelative("SENSOR_FRAME_RATE", -1)
 
 class KeyPad:
 
@@ -135,8 +153,7 @@ class KeyPad:
         self.row = [Button(n) for n in range(0,4)]
         self.col = [Button(n) for n in range(5,9)]
 
-        iso_plus = RCPSetListRelative("ISO", +1)
-        iso_minus = RCPSetListRelative("ISO", -1)
+
 
         self.config = [
             [iso_plus, iso_minus, None, None],
@@ -156,7 +173,8 @@ class KeyPad:
     
 
                     
-
+get_fps = RCPGetList("SENSOR_FRAME_RATE")
+get_iso = RCPGetList("ISO")
 
 
 
@@ -164,21 +182,43 @@ def main():
 
     # websocket init
     camera = RedCamera()
-    camera.connect('ws://localhost:9998')
+    camera.connect('ws://192.168.1.1:9998')
     camera.initialize()
     camera.retrieve_available_config()
 
-    keypad = KeyPad()
+    # keypad = KeyPad()
 
     # gpio reading loop
     while(True):
-        sleep(0.05)
+        # sleep(0.05)
 
-        c,r = keypad.check()        
+        char = input()
 
-        if c is not None and r is not None:
-            camera.send(keypad.config[r][c])
-            sleep(0.1)
+        if char == '\x1b[A': # arrow up
+            camera.send(iso_plus)
+            # print(camera.recv().data)
+            # print(camera.recv().data)
+            # print(camera.recv().data)
+        elif char == '\x1b[B': 
+            camera.send(iso_minus)
+            # print(camera.recv().data)
+            # print(camera.recv().data)
+            # print(camera.recv().data)
+        elif char == 'e':
+            camera.send(fps_plus)
+            # print(camera.recv().data)
+        elif char == 'g':
+            msg = camera.send(get_fps)
+            print(msg.data)
+        elif char == 'i':
+            camera.send(get_iso)
+            print(camera.recv().data)
+
+        # c,r = keypad.check()        
+
+        # if c is not None and r is not None:
+            # camera.send(keypad.config[r][c])
+            # sleep(0.1)
 
 
 if __name__ == "__main__":
