@@ -1,5 +1,5 @@
 import logging
-from time import sleep
+import time
 import json
 
 from websockets.sync.client import connect, ClientConnection
@@ -18,7 +18,7 @@ class RedCameraWebSocketConnection(RedCameraConnection):
                 return True
             except Exception as e:
                 logging.error(f'Cannot connect to websocket {uri} due to {e}, retrying in 1 seconds')
-                sleep(1)
+                time.sleep(1)
     
     def close(self):
         if self.websocket:
