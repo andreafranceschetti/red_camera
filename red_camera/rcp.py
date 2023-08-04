@@ -1,4 +1,5 @@
 import json 
+from typing import List
 
 class RCP_PARAM:
     FPS = "RCP_PARAM_SENSOR_FRAME_RATE"
@@ -9,11 +10,16 @@ class RCP_PARAM:
     AUDIO_EXTERNAL_LEFT_GAIN = 'RCP_PARAM_AUDIO_EXTERNAL_LEFT_GAIN'
     FAN_MODE = 'RCP_PARAM_FAN_MODE'
     CAMERA_INFO = 'RCP_PARAM_CAMERA_INFO'
+    SHUTTER_ANGLE = 'RCP_PARAM_EXPOSURE_ANGLE'
+    EXPOSURE_SHUTTER_ANGLE = 'RCP_PARAM_EXPOSURE_ANGLE'
+    EXPOSURE_SHUTTER_DISPLAY = 'RCP_PARAM_EXPOSURE_DISPLAY'
+    EXPOSURE_SHUTTER_SPEED = 'RCP_PARAM_EXPOSURE_INTEGRATION_TIME'
 
 class RCP_TYPE:
     RCP_GET = 'rcp_get'
     RCP_GET_TYPES = 'rcp_get_types'
     RCP_CUR_TYPES = 'rcp_cur_types'
+    RCP_CUR_LIST = 'rcp_cur_list'
     RCP_GET_LIST = 'rcp_get_list'
     RCP_CONFIG = 'rcp_config'
     RCP_SET = 'rcp_set'
@@ -73,6 +79,20 @@ class RCPSubscribe(RCPMessage):
             "on_off": subscribe
         }
 
+class RCPParam:
+
+    def __init__(self, number:int, string:str) -> None:
+        self.number = number
+        self.string = string
+
+
+class RCPParamList:
+
+    def __init__(self, cur: int, param_list : List[RCPParam]) -> None:
+        self.cur = cur 
+        self.param_list = param_list 
+        
+
 class RCPSet(RCPMessage):
 
     def __init__(self, param_id:str, value=None, x=None, y=None, width=None, height=None, action=None, held=None, argument=None ) -> None:
@@ -106,6 +126,7 @@ class RCPSetRelative(RCPMessage):
         }
 
 class RCPSetListRelative(RCPMessage):
+    """ Set a parameter offset from current list"""
 
     def __init__(self, param_id:str, offset:int) -> None:
         self.data = {
