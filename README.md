@@ -7,14 +7,16 @@ Software for isotecnic red camera control.
 - Version 0.1:
     - Wifi (via websockets library)
 
-# Useful commands for the raspberry pi 
+## Useful commands for the raspberry pi 
 
-## Select wifi network from cli
+Hereby you can find a list of useful commands to test this package from raspberry.
+
+### Select wifi network from cli with `wpa_cli`
 
 ```
 wpa_cli -i wlan0 list_networks
 ```
-Choose now your network ID:
+Choose now your network number ID:
 
 ```
 wpa_cli -i wlan0 select_network <ID>
@@ -24,6 +26,13 @@ You can find registered networks (with ssid and psw) in this text file:
 
 ```
 /etc/wpa_supplicant/wpa_supplicant.conf
+```
+
+### Access raspberry pi via ssh
+
+Access the raspberry pi zero w if connected to the same wifi network (password `raspberry`):
+```
+ssh pi@raspberrypi.local
 ```
 
 ## Install the `red_camera` package
