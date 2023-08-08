@@ -1,15 +1,15 @@
 #! /usr/bin/env python
 
 from red_camera.camera import RedCamera
-from red_camera.connections.websocket import RedCameraWebSocketConnection
+from red_camera.connections.wifi import RedCameraWifiConnection
 from red_camera.rcp import *
 from time import sleep
 
 def main():
-    websocket = RedCameraWebSocketConnection()
-    websocket.open('ws://192.168.1.1:9998')
+    wifi = RedCameraWifiConnection()
+    wifi.open('ws://192.168.1.1:9998')
 
-    camera = RedCamera(connection=websocket)
+    camera = RedCamera(connection=wifi)
     camera.initialize()
     camera.get_camera_info()
 

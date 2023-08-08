@@ -7,7 +7,7 @@ from red_camera.connections.base import RedCameraConnection
 from red_camera.rcp import *
 
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 class RedCamera:
 

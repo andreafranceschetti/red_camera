@@ -1,0 +1,14 @@
+[Unit]
+Description=red camera project for isotecnic
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always 
+RestartSec=1
+User=pi
+ExecStart=python ~/red_camera/scripts/test_increase_decrease_fps.py
+
+[Install]
+WantedBy=multi-user.target
