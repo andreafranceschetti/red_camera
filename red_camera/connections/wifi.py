@@ -7,7 +7,7 @@ from websockets.sync.client import connect, ClientConnection
 from red_camera.rcp import RCPMessage
 from red_camera.connections.base import RedCameraConnection
 
-class RedCameraWifiConnection(RedCameraConnection):
+class WifiRedCameraConnection(RedCameraConnection):
 
     websocket : ClientConnection = None
 

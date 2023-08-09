@@ -17,14 +17,17 @@ class RedCamera:
         self.available_settings : dict = {}
         self.info : dict = {}
         self.custom_available_settings : Dict[str, RCPParamList] = {}
+        self.inizialized = False
 
-    def __receive(self):
+    def __receive_rcp(self):
+        """rcp receiving thread"""
         while True:
             msg = self.connection.recv()
             logging.debug(f'*** Camera rx  <<<<< : {msg.data}')
 
             if msg.type == RCP_TYPE.RCP_CONFIG:
                 logging.info('Camera initialized')
+                self.initialized = True
             elif msg.type == RCP_TYPE.RCP_CUR_TYPES:
                 logging.debug('received camera available settings')
                 self.available_settings = msg.data
@@ -72,12 +75,20 @@ class RedCamera:
         ends a rcp_config messaget to initialize the camera json protocol
         """
 
-        self.recv_thread = Thread(target=self.__receive)
-        self.recv_thread.start()
+        self.rcp_thread = Thread(target=self.__receive_rcp)
+        # self.keypad_thread = Thread(target=self.__receive_keypad)
 
-        self.connection.send(RCPConfig())
-        self.connection.send(RCPGetTypes())
+        self.rcp_thread.start()
+        # self.keypad_thread.start()
 
+        logging.info('Initializing camera...')
+        while not self.initialized:
+            self.connection.send(RCPConfig())
+            self.connection.send(RCPGetTypes())
+            sleep(0.1)
+
+        return self.initialized
+    
     def get_camera_info(self) -> None:
         """gets the camera infos"""
         self.connection.send(RCPGet(RCP_PARAM.CAMERA_INFO))

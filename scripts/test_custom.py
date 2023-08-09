@@ -1,12 +1,12 @@
 #! /usr/bin/env python
 
 from red_camera.camera import RedCamera
-from red_camera.connections.wifi import RedCameraWifiConnection
+from red_camera.connections.wifi import WifiRedCameraConnection
 from red_camera.rcp import *
 from time import sleep
 
 def main():
-    wifi = RedCameraWifiConnection()
+    wifi = WifiRedCameraConnection()
     wifi.open('ws://192.168.1.1:9998')
 
     camera = RedCamera(connection=wifi)
