@@ -5,7 +5,7 @@ from functools import partial
 from red_camera.camera import RedCamera, logging
 from red_camera.keypad import KeyPad
 from red_camera.connections.wifi import WifiRedCameraConnection
-from red_camera.rcp import RCP_PARAM
+from red_camera.rcp import *
 
 def main():
 
@@ -24,13 +24,16 @@ def main():
 
     # create keypad functions
     keypad = KeyPad()
-    
+
     increase_fps = partial(camera.increase, RCP_PARAM.FPS)
     decrease_fps = partial(camera.decrease, RCP_PARAM.FPS)
+    
+    increase_iso = partial(camera.send, RCPSetListRelative(RCP_PARAM.ISO, +1))
+    decrease_iso = partial(camera.send, RCPSetListRelative(RCP_PARAM.ISO, -1))
 
     keypad_functions = [
-        [increase_fps, None, None, None],
-        [decrease_fps, None, None, None],
+        [increase_fps, increase_iso, None, None],
+        [decrease_fps, decrease_iso, None, None],
         [None, None, None, None],
         [None, None, None, None]
     ]
@@ -43,9 +46,10 @@ def main():
         if r and c:
             f = keypad_functions[r][c]
             if callable(f): 
+                logging.warning(f'Button [{r},{c}] pressed!')
                 f()
             else:
-                logging.warn(f'Button [{r},{c}] has no function!')
+                logging.warning(f'Button [{r},{c}] pressed but has no function!')
 
         time.sleep(0.01)
 
