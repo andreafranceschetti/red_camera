@@ -53,6 +53,11 @@ class RedCamera:
         
 
     def _set_value(self, param_id: RCP_PARAM, offset:int):
+
+        if not self.initialized:
+            logging.warning('Camera is not initialized')
+            return
+
         for _ in range(3):
             try:
                 available_param_list = self.custom_available_settings[param_id]
@@ -99,10 +104,17 @@ class RedCamera:
     
     def get_camera_info(self) -> None:
         """gets the camera infos"""
+        if not self.initialized:
+            logging.warning('Camera is not initialized')
+            return
+
         self.connection.send(RCPGet(RCP_PARAM.CAMERA_INFO))
 
     def get_list(self, param_id:RCP_PARAM):
         """sends rcp_get_list for a given parameter"""
+        if not self.initialized:
+            logging.warning('Camera is not initialized')
+            return
         self.connection.send(RCPGetList(param_id))
 
     def increase(self, param_id: RCP_PARAM, step = 1):
