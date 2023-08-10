@@ -4,6 +4,8 @@ from red_camera.camera import RedCamera
 from red_camera.connections.wifi import WifiRedCameraConnection
 from red_camera.rcp import *
 
+from time import sleep
+
 def main():
 
     wifi = WifiRedCameraConnection()
@@ -29,6 +31,7 @@ def main():
             return
         else:
             print(f'unknown command {c}')
+        sleep(0.5)
 
 
 if __name__ == "__main__":

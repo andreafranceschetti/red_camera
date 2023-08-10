@@ -23,6 +23,8 @@ class RCP_TYPE:
     RCP_GET_LIST = 'rcp_get_list'
     RCP_CONFIG = 'rcp_config'
     RCP_SET = 'rcp_set'
+    RCP_CUR_INT = 'rcp_cur_int'
+    RCP_CUR_STR = 'rcp_cur_str',
     RCP_SET_LIST_RELATIVE = 'rcp_set_list_relative'
     RCP_SET_RELATIVE = 'rcp_set_relative'
     RCP_SUBSCRIBE = 'rcp_subscribe'

@@ -17,7 +17,7 @@ class RedCamera:
         self.available_settings : dict = {}
         self.info : dict = {}
         self.custom_available_settings : Dict[str, RCPParamList] = {}
-        self.inizialized = False
+        self.initialized = False
 
     def __receive_rcp(self):
         """rcp receiving thread"""
@@ -38,6 +38,14 @@ class RedCamera:
                 cur = msg.data['list']['cur']
                 param_list = [RCPParam(param['num'], param['str']) for param in msg.data['list']['data']]
                 self.custom_available_settings['RCP_PARAM_' + msg.id] = RCPParamList(cur=cur, param_list=param_list)
+            elif msg.type == RCP_TYPE.RCP_CUR_INT:
+                param_id = msg.id
+                param_value = msg.data['cur']
+                logging.info(f'Parameter {param_id} set to {param_value }')
+            elif msg.type == RCP_TYPE.RCP_CUR_STR:
+                param_id = msg.id
+                param_value = msg.data['display']
+                logging.info(f'Parameter {param_id} set to {param_value }')
 
     def send(self, message: RCPMessage) -> None:
         logging.debug(f'*** Camera tx >>>>>>  {message.data}')
