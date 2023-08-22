@@ -18,7 +18,7 @@ class KeyPad:
         for r, row in enumerate(self.rows):
             row.on()
             for c, button in enumerate(self.cols):
-                if button.is_pressed:
+                if button.is_active:
                     return r, c
             row.off()
         return None, None

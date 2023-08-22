@@ -2,6 +2,7 @@ import logging
 import time
 import json
 
+from typing import Optional
 from websockets.sync.client import connect, ClientConnection
 
 from red_camera.rcp import RCPMessage
@@ -9,10 +10,10 @@ from red_camera.connections.base import RedCameraConnection
 
 class WifiRedCameraConnection(RedCameraConnection):
 
-    websocket : ClientConnection = None
+    websocket : Optional[ClientConnection] = None
 
     def open(self, uri:str):
-        while (not self.websocket):
+        while self.websocket is None:
             try:
                 self.websocket = connect(uri)
                 return True
@@ -25,10 +26,13 @@ class WifiRedCameraConnection(RedCameraConnection):
             self.websocket.close()
 
     def send(self, message:RCPMessage):
-        self.websocket.send(message.to_json())
+        if self.websocket is not None:
+            self.websocket.send(message.to_json())
 
-    def recv(self, timeout = None) -> RCPMessage:
+    def recv(self, timeout = None) -> Optional[RCPMessage]:
         """if timeout is None, this is blocking until a new message is received"""
+        if self.websocket is None:
+            return None
         try:
             data = json.loads(self.websocket.recv(timeout=timeout))
         except TimeoutError:

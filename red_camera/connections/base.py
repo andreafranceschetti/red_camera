@@ -20,3 +20,9 @@ class RedCameraConnection(ABC):
     def recv(self, timeout=None) -> RCPMessage:
         pass
 
+    def __enter__(self):
+        self.open()
+
+    def __exit__(self, exc_type, exc_value, exc_tb):
+        self.close()
+

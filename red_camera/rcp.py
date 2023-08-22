@@ -139,7 +139,7 @@ class RCPSetListRelative(RCPMessage):
 
 class RCPGetList(RCPMessage):
 
-    def __init__(self, param_id:str) -> None:
+    def __init__(self, param_id: RCP_PARAM ) -> None:
         self.data = {
             "type":RCP_TYPE.RCP_GET_LIST,
             "id": param_id,
