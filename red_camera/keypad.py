@@ -7,7 +7,7 @@ from threading import Timer
 class KeyPad:
     """keypad device"""
 
-    def __init__(self, rows = [4,17,27,22], cols = [18,23,23,25]) -> None:
+    def __init__(self, rows = [4,17,27,22], cols = [18,23,24,25]) -> None:
         """ initialize this class with your gpio hardware configuration """
 
         self.rows = [DigitalOutputDevice(n) for n in rows]
