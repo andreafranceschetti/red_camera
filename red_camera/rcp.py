@@ -14,6 +14,7 @@ class RCP_PARAM:
     EXPOSURE_SHUTTER_ANGLE = 'RCP_PARAM_EXPOSURE_ANGLE'
     EXPOSURE_SHUTTER_DISPLAY = 'RCP_PARAM_EXPOSURE_DISPLAY'
     EXPOSURE_SHUTTER_SPEED = 'RCP_PARAM_EXPOSURE_INTEGRATION_TIME'
+    KEYACTION = 'KEYACTION'
 
 class RCP_TYPE:
     RCP_GET = 'rcp_get'
@@ -30,6 +31,85 @@ class RCP_TYPE:
     RCP_SUBSCRIBE = 'rcp_subscribe'
     RCP_CUR_CAM_INFO = 'rcp_cur_cam_info'
 
+class RCP_KEYACTION:
+    DISABLED = 0
+    RECORD_START = 1
+    RECORD_STOP = 2
+    RECORD_TOGGLE = 3
+    PLAYBACK_ENTER = 4
+    PLAYBACK_EXIT = 5
+    PLAYBACK_TOGGLE = 6
+    PLAYBACK_PLAY = 7
+    PLAYBACK_PAUSE = 8
+    PLAYBACK_PLAY_PAUSE_TOGGLE = 9
+    APERTURE_INCREMENT = 10
+    APERTURE_DECREMENT = 11
+    SHUTTER_INCREMENT = 12
+    SHUTTER_DECREMENT = 13
+    ISO_INCREMENT = 14
+    ISO_DECREMENT = 15
+    COLOR_TEMPERATURE_INCREMENT = 16
+    COLOR_TEMPERATURE_DECREMENT = 17
+    SDI_2_MAGNIFY_ON = 18
+    SDI_2_MAGNIFY_OFF = 19
+    SDI_1_MAGNIFY_ON = 20
+    SDI_1_MAGNIFY_OFF = 21
+    SDI_1_SDI_2_MAGNIFY_ON = 22
+    SDI_1_SDI_2_MAGNIFY_OFF = 23
+    FALSE_COLOR_CYCLE_NEXT = 24
+    FALSE_COLOR_CYCLE_PREV = 25
+    PEAKING_CYCLE_NEXT = 26
+    PEAKING_CYCLE_PREV = 27
+    TOOLS_CYCLE_NEXT = 28
+    TOOLS_CYCLE_PREV = 29
+    APPLY_PRESET = 30
+    AUTO_WB = 31
+    EJECT_MEDIA = 32
+    FORMAT_MEDIA = 33
+    JAM_TC_TO_TOD = 34
+    START_AF = 35
+    SAVE_LOG = 36
+    SDI_1_MAGNIFY_TOGGLE = 37
+    SDI_2_MAGNIFY_TOGGLE = 38
+    PRE_RECORD_ENABLE_TOGGLE = 39
+    PRE_RECORD_CANCEL = 40
+    FALSE_COLOR_TOGGLE = 41
+    PEAKING_TOGGLE = 42
+    LOG_VIEW_TOGGLE = 43
+    ZEBRA_1_TOGGLE = 44
+    ZEBRA_2_TOGGLE = 45
+    SDI_1_GUIDES_TOGGLE = 46
+    SDI_2_GUIDES_TOGGLE = 47
+    SDI_1_TOOLS_TOGGLE = 48
+    SDI_2_TOOLS_TOGGLE = 49
+    SDI_1_OVERLAY_TOGGLE = 50
+    SDI_2_OVERLAY_TOGGLE = 51
+    FRAME_GUIDE_1_TOGGLE = 52
+    FRAME_GUIDE_2_TOGGLE = 53
+    FRAME_GUIDE_3_TOGGLE = 54
+    CENTER_GUIDE_TOGGLE = 55
+    ND_INCREMENT = 56
+    ND_DECREMENT = 57
+    DSI_1_MAGNIFY_ON = 58
+    DSI_1_MAGNIFY_OFF = 59
+    DSI_1_MAGNIFY_TOGGLE = 60
+    DSI_1_GUIDES_TOGGLE = 61
+    DSI_1_TOOLS_TOGGLE = 62
+    DSI_1_OVERLAY_TOGGLE = 63
+    ND_CLEAR_TOGGLE = 64
+    SENSOR_FLIP_TOGGLE = 65
+    SYNC_SHIFT_INC_SMALL = 66
+    SYNC_SHIFT_DEC_SMALL = 67
+    SYNC_SHIFT_INC_MEDIUM = 68
+    SYNC_SHIFT_DEC_MEDIUM = 69
+    SYNC_SHIFT_INC_LARGE = 70
+    SYNC_SHIFT_DEC_LARGE = 71
+    AUX_1_TOGGLE = 72
+    AUX_2_TOGGLE = 73
+    AUX_3_TOGGLE = 74
+    RS_TOGGLE_24V = 75
+    EJECT_USBC_MEDIA = 76
+    COUNT = 77
 
 class RCPMessage:
     def __init__(self, data: dict) -> None:
@@ -97,7 +177,7 @@ class RCPParamList:
 
 class RCPSet(RCPMessage):
 
-    def __init__(self, param_id:str, value=None, x=None, y=None, width=None, height=None, action=None, held=None, argument=None ) -> None:
+    def __init__(self, param_id:str, value=None, x=None, y=None, width=None, height=None, action:RCP_KEYACTION=None, held=None, argument=None ) -> None:
         self.data = {
             "type": RCP_TYPE.RCP_SET,
             "id": param_id,
@@ -114,7 +194,7 @@ class RCPSet(RCPMessage):
         if height: 
             self.data['height'] = height
         if action:
-            self.data['action'] =action
+            self.data['action'] = action
         if argument:
             self.data['argument'] = argument
 

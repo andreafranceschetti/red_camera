@@ -1,17 +1,16 @@
 #! /usr/bin/env python
 
 from red_camera.camera import RedCamera
-from red_camera.connections.wifi import WifiRedCameraConnection
+from red_camera.connections.uart import UartSerialRedCameraConnection
 from red_camera.rcp import *
 from time import sleep
 
 def main():
 
-    wifi = WifiRedCameraConnection()
-    wifi.open('ws://169.254.1.1:9998')
-    # wifi.open('ws://1.168.1.1:9998')
+    uart = UartSerialRedCameraConnection('/dev/ttyUSB0')
+    uart.open()
 
-    camera = RedCamera(connection=wifi)
+    camera = RedCamera(connection=uart)
     camera.initialize()
     camera.get_camera_info()
 
@@ -52,14 +51,8 @@ def main():
             camera.send(RCPSetListRelative(RCP_PARAM.COLOR_TEMP, +1))
         elif char == 'wb-':
             camera.send(RCPSetListRelative(RCP_PARAM.COLOR_TEMP, -1))
-        elif char == 'a+':
-            camera.send(RCPSet(RCP_PARAM.KEYACTION, action=RCP_KEYACTION.ISO_INCREMENT))
-        elif char == 'a-':
-            camera.send(RCPSet(RCP_PARAM.KEYACTION, action=RCP_KEYACTION.ISO_DECREMENT))
-        elif char == 'c+':
-            camera.send(RCPSet(RCP_PARAM.KEYACTION, action=RCP_KEYACTION.COLOR_TEMPERATURE_INCREMENT))
-        elif char == 'c-':
-            camera.send(RCPSet(RCP_PARAM.KEYACTION, action=RCP_KEYACTION.COLOR_TEMPERATURE_DECREMENT))
+
+
 
 if __name__ == "__main__":
     main()

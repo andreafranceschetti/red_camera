@@ -8,7 +8,7 @@ Type=simple
 Restart=always 
 RestartSec=1
 User=pi
-ExecStart=python ~/red_camera/scripts/test_increase_decrease_fps.py
+ExecStart=python ~/red_camera/scripts/test_final.py
 
 [Install]
 WantedBy=multi-user.target
