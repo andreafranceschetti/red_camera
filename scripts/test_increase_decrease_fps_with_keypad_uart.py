@@ -41,7 +41,7 @@ def main():
     while True:
         r,c = keypad.read()
 
-        if r and c:
+        if r is not None and c is not None:
             f = keypad_functions[r][c]
             if callable(f): 
                 logging.warning(f'Button [{r},{c}] pressed!')

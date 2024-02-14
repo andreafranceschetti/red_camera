@@ -15,13 +15,17 @@ class KeyPad:
     
 
     def read(self):
+        pressed_row, pressed_col = None, None
+
         for r, row in enumerate(self.rows):
             row.on()
             for c, button in enumerate(self.cols):
                 if button.is_active:
-                    return r, c
+                    pressed_row = r
+                    pressed_col = c
             row.off()
-        return None, None
+
+        return pressed_row, pressed_col 
     
 # taken from pad4pi
 # https://github.com/brettmclean/pad4pi
