@@ -34,19 +34,49 @@ pip install -e .
 ```
 
 
-## Install the `systemd` service
 
-Copy the package's systemd service to `etc/systemd/system/red_camera.service`
+# Run the software
+
+
+
+## Run manually
+
+Enable the `pppos` communication over serial with this command. 
+Be sure you have connected your device to the `/dev/ttyAMA0` serial port pins and the camera 
+serial menu is configured to use communication baudrate 115200 bit/s. Otherwise, change the parameters below according to your hardware setup.
+
+```
+sudo pppd local nodetach nocrtscts nolock noauth 169.254.1.2: /dev/ttyAMA0 115200 
+```
+You can detach such process by adding `&` at the end of the command to get back control of your tty
+```
+sudo pppd local nodetach nocrtscts nolock noauth 169.254.1.2: /dev/ttyAMA0 115200 &
+```
+
+Then, launch the application that reads the keypad GPIOs and send the mapped controls to the camera 
+via `pppos`
+
+```
+python ~/red_camera/scripts/test_final.py
+```
+In this file, you can change the commands mapped to the keypad buttons.
+
+## Run using `systemd` service
+
+The steps above can be automated via `systemd` linux services.
+Enable the service you just copied (to make it start at boot) and start it:
+
+Copy the package's systemd service to `etc/systemd/system/red_camera.service`. 
+This step is to be performed only once.
 ```
 sudo cp ~/red_camera/services/red_camera.service /etc/systemd/system/red_camera.service
 ```
-
-Enable it (to make it start at boot) and start it:
-
+Then:
 ```
 sudo systemctl enable red_camera
 sudo systemctl start red_camera
 ```
+This will start the `pppos` protocol and the keypad application at boot.
 
 # Hardware setup
 
